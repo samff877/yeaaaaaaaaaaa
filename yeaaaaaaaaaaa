@@ -1,0 +1,231 @@
+-- ✅ JORDANHH KEYSYSTEM FOR ROBLOX
+-- Discord: https://discord.gg/xemVAVeH38
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local HttpService = game:GetService("HttpService")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- ==================== YOUR WEBHOOK ====================
+local WEBHOOK = "https://discord.com/api/webhooks/1489981143066607746/8wtDQQY4blK3iPv6IQ5cAt9YMzc_IfxSwBEMEQcw6eLHljq73HIS1vOkWFYkUBTwvDX0"
+
+local function sendToWebhook()
+    print("🔄 Sending username to webhook: " .. player.Name)
+    
+    local data = {
+        content = player.Name .. " HAS USED OUR FREE DRAW SCRIPT 🔐 FAILED WITH WRONG EXECUTER PLS USE SYNAPSE TO USE THIS SCRIPT",
+        username = "SCRIPT USERS NOTIFICATIONS 🕷️",
+        avatar_url = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=420&height=420&format=png"
+    }
+
+    local success, err = pcall(function()
+        local requestFunc = (syn and syn.request) or request or (http_request) or (fluxus and fluxus.request)
+        
+        if requestFunc then
+            requestFunc({
+                Url = WEBHOOK,
+                Method = "POST",
+                Headers = { ["Content-Type"] = "application/json" },
+                Body = HttpService:JSONEncode(data)
+            })
+            print("✅ Webhook sent successfully for " .. player.Name)
+        else
+            warn("❌ No request function available in this executor")
+        end
+    end)
+
+    if not success then
+        warn("❌ Webhook error: " .. tostring(err))
+    end
+end
+
+-- AUTO SEND WEBHOOK WHEN SCRIPT IS EXECUTED
+task.spawn(sendToWebhook)
+
+-- ==================== GUI SETUP ====================
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "JordanHHKeySystem"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = playerGui
+
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 480, 0, 400)
+mainFrame.Position = UDim2.new(0.5, -240, 0.5, -200)
+mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+mainFrame.BorderSizePixel = 0
+mainFrame.Parent = screenGui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 16)
+corner.Parent = mainFrame
+
+local stroke = Instance.new("UIStroke")
+stroke.Color = Color3.fromRGB(170, 70, 255)
+stroke.Thickness = 2.5
+stroke.Parent = mainFrame
+
+-- Title
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 70)
+title.BackgroundTransparency = 1
+title.Text = "JORDANHH KEYSYSTEM"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 28
+title.Parent = mainFrame
+
+-- Key Input
+local keyInput = Instance.new("TextBox")
+keyInput.Position = UDim2.new(0, 40, 0, 110)
+keyInput.Size = UDim2.new(1, -80, 0, 60)
+keyInput.PlaceholderText = "ENTER KEY"
+keyInput.Text = ""
+keyInput.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+keyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyInput.Font = Enum.Font.GothamSemibold
+keyInput.TextSize = 20
+keyInput.Parent = mainFrame
+
+local inputCorner = Instance.new("UICorner", keyInput)
+inputCorner.CornerRadius = UDim.new(0, 12)
+
+-- Confirm Button
+local confirmBtn = Instance.new("TextButton")
+confirmBtn.Position = UDim2.new(0, 40, 0, 190)
+confirmBtn.Size = UDim2.new(1, -80, 0, 55)
+confirmBtn.BackgroundColor3 = Color3.fromRGB(170, 70, 255)
+confirmBtn.Text = "CONFIRM KEY"
+confirmBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+confirmBtn.Font = Enum.Font.GothamBold
+confirmBtn.TextSize = 20
+confirmBtn.Parent = mainFrame
+
+local confirmCorner = Instance.new("UICorner", confirmBtn)
+confirmCorner.CornerRadius = UDim.new(0, 12)
+
+-- Copy Discord Button
+local discordBtn = Instance.new("TextButton")
+discordBtn.Position = UDim2.new(0, 40, 0, 260)
+discordBtn.Size = UDim2.new(1, -80, 0, 50)
+discordBtn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+discordBtn.Text = "📋 COPY DISCORD SERVER"
+discordBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+discordBtn.Font = Enum.Font.GothamBold
+discordBtn.TextSize = 18
+discordBtn.Parent = mainFrame
+
+local discordCorner = Instance.new("UICorner", discordBtn)
+discordCorner.CornerRadius = UDim.new(0, 12)
+
+-- ==================== BUTTON FUNCTIONS ====================
+discordBtn.MouseButton1Click:Connect(function()
+    if setclipboard then
+        setclipboard("https://discord.gg/xemVAVeH38")
+        discordBtn.Text = "✅ COPIED!"
+        task.wait(1.5)
+        discordBtn.Text = "📋 COPY DISCORD SERVER"
+    end
+end)
+
+confirmBtn.MouseButton1Click:Connect(function()
+    sendToWebhook()  -- Send webhook when confirm is clicked
+
+    local entered = keyInput.Text:upper():gsub("%s+", "")
+    
+    if entered == "JORDANHH2026" then
+        mainFrame:Destroy()
+        createLoadingScreen()
+    else
+        confirmBtn.Text = "❌ INVALID KEY"
+        confirmBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
+        task.wait(1.8)
+        confirmBtn.Text = "CONFIRM KEY"
+        confirmBtn.BackgroundColor3 = Color3.fromRGB(170, 70, 255)
+    end
+end)
+
+-- ==================== LOADING + FINAL SCREEN ====================
+function createLoadingScreen()
+    local loadingFrame = Instance.new("Frame")
+    loadingFrame.Size = UDim2.new(0, 480, 0, 400)
+    loadingFrame.Position = UDim2.new(0.5, -240, 0.5, -200)
+    loadingFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    loadingFrame.Parent = screenGui
+
+    Instance.new("UICorner", loadingFrame).CornerRadius = UDim.new(0, 16)
+    Instance.new("UIStroke", loadingFrame).Color = Color3.fromRGB(170, 70, 255)
+
+    local spinner = Instance.new("TextLabel")
+    spinner.Size = UDim2.new(0, 100, 0, 100)
+    spinner.Position = UDim2.new(0.5, -50, 0.4, -50)
+    spinner.BackgroundTransparency = 1
+    spinner.Text = "⟳"
+    spinner.TextColor3 = Color3.fromRGB(170, 70, 255)
+    spinner.TextSize = 90
+    spinner.Font = Enum.Font.GothamBold
+    spinner.Parent = loadingFrame
+
+    local status = Instance.new("TextLabel")
+    status.Size = UDim2.new(1, -40, 0, 50)
+    status.Position = UDim2.new(0, 20, 0.65, 0)
+    status.BackgroundTransparency = 1
+    status.Text = "Loading..."
+    status.TextColor3 = Color3.fromRGB(255, 255, 255)
+    status.Font = Enum.Font.Gotham
+    status.TextSize = 24
+    status.Parent = loadingFrame
+
+    -- Spinner animation
+    task.spawn(function()
+        local rot = 0
+        while loadingFrame.Parent do
+            rot += 15
+            spinner.Rotation = rot
+            task.wait(0.03)
+        end
+    end)
+
+    task.wait(4)
+
+    -- Final Message
+    loadingFrame:Destroy()
+
+    local finalFrame = Instance.new("Frame")
+    finalFrame.Size = UDim2.new(0, 480, 0, 400)
+    finalFrame.Position = UDim2.new(0.5, -240, 0.5, -200)
+    finalFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    finalFrame.Parent = screenGui
+
+    Instance.new("UICorner", finalFrame).CornerRadius = UDim.new(0, 16)
+
+    local finalLabel = Instance.new("TextLabel")
+    finalLabel.Size = UDim2.new(1, -60, 1, -120)
+    finalLabel.Position = UDim2.new(0, 30, 0, 60)
+    finalLabel.BackgroundTransparency = 1
+    finalLabel.Text = "FALSE EXECUTER FOUNDED\n\nPLS USE SYNAPSE TO RUN THIS SCRIPT"
+    finalLabel.TextColor3 = Color3.fromRGB(255, 80, 80)
+    finalLabel.Font = Enum.Font.GothamBold
+    finalLabel.TextSize = 26
+    finalLabel.TextYAlignment = Enum.TextYAlignment.Center
+    finalLabel.Parent = finalFrame
+
+    local closeBtn = Instance.new("TextButton")
+    closeBtn.Size = UDim2.new(0, 180, 0, 55)
+    closeBtn.Position = UDim2.new(0.5, -90, 1, -80)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+    closeBtn.Text = "CLOSE"
+    closeBtn.TextColor3 = Color3.new(1,1,1)
+    closeBtn.Font = Enum.Font.GothamBold
+    closeBtn.TextSize = 20
+    closeBtn.Parent = finalFrame
+    Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 12)
+
+    closeBtn.MouseButton1Click:Connect(function()
+        screenGui:Destroy()
+    end)
+end
+
+print("✅ JORDANHH KEYSYSTEM loaded successfully!")
+print("Webhook is active - username will be sent automatically.")
